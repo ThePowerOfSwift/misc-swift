@@ -56,4 +56,50 @@ guy = Dog()
 guy.TellJoke?()
 
 
+protocol DateSimulatorDelegate {
+	func dateSimulatorDidStart(sim: DateSimulator, a: Speaker, b: Speaker)
+	func dateSimulatorDidEnd(sim: DateSimulator, a: Speaker, b: Speaker)
+}
+
+class LoggingDateSimulator: DateSimulatorDelegate {
+	func dateSimulatorDidStart(sim: DateSimulator, a: Speaker, b: Speaker) {
+		println("Date started!")
+	}
+	func dateSimulatorDidEnd(sim: DateSimulator, a: Speaker, b: Speaker) {
+		println("Date ended!")
+	}
+}
+
+class DateSimulator {
+	//a delegate is just a class that implements a protocol
+	var delegate: DateSimulatorDelegate?
+	let a: Speaker
+	let b: Speaker
+	
+	init(a: Speaker, b: Speaker) {
+		self.a = a
+		self.b = b
+	}
+
+	func simulate() {
+		delegate?.dateSimulatorDidStart(self, a: a, b: b)
+		println("Off to dinner")
+		a.Speak()
+		b.Speak()
+		println("Walking back home")
+		a.TellJoke?()
+		b.TellJoke?()
+		delegate?.dateSimulatorDidEnd(self, a: a, b: b)
+	}
+}
+
+let sim = DateSimulator(a: Vicki(), b: Ray())
+sim.delegate = LoggingDateSimulator()
+sim.simulate()
+
+
+
+
+
+
 
